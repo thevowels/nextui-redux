@@ -41,6 +41,9 @@ export const todoSlice = createAppSlice({
     reducers: (create) =>({
         addTodo: create.reducer( (state, action: PayloadAction<Todo>) =>{
             state.items.push(action.payload);
+        }),
+        deleteTodo: create.reducer((state, action: PayloadAction<number>) => {
+            state.items = state.items.filter(item => item.id != action.payload);
         })
     }),
     selectors: {
@@ -48,7 +51,7 @@ export const todoSlice = createAppSlice({
     }
 });
 
-export const { addTodo } = todoSlice.actions;
+export const { addTodo,deleteTodo } = todoSlice.actions;
 export const {selectTodos} = todoSlice.selectors;
 
 
