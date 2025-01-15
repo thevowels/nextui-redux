@@ -5,7 +5,7 @@ import { Nav } from "./components/Nav";
 
 import "./styles/globals.css";
 import styles from "./styles/layout.module.css";
-
+import "./globals.css";
 interface Props {
   readonly children: ReactNode;
 }
@@ -13,7 +13,7 @@ interface Props {
 export default function RootLayout({ children }: Props) {
   return (
     <StoreProvider>
-      <html lang="en">
+      <html lang="en" className='light'>
         <body>
           <section className={styles.container}>
             <Nav />

@@ -24,14 +24,22 @@ export const Nav = () => {
       >
         Verify
       </Link>
-      <Link
+    <Link
         className={`${styles.link} ${
-          pathname === "/quotes" ? styles.active : ""
+            pathname === "/quotes" ? styles.active : ""
         }`}
         href="/quotes"
-      >
+    >
         Quotes
-      </Link>
+    </Link>
+    <Link
+        className={`${styles.link} ${
+            pathname === "/todos" ? styles.active : ""
+        }`}
+        href="/todos"
+    >
+        Todos
+    </Link>
     </nav>
   );
 };

@@ -27,5 +27,8 @@ export const StoreProvider = ({ children }: Props) => {
     }
   }, []);
 
-  return <Provider store={storeRef.current}>{children}</Provider>;
+  return <Provider store={storeRef.current}>
+                      {children}
+                  </Provider>
+      ;
 };
