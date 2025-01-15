@@ -41,19 +41,24 @@ function TodoInput() {
     )
 }
 
-export default function TodosPage(){
+function TodoItem({todo}:{todo:Todo}){
     const dispatch = useAppDispatch();
+
+    return(
+          <Card className={"w-[300px] lg:w-[330px]  "}>
+              <CardBody className={"flex flex-row justify-between gap-4"}>
+                  <p className={"text-blue-500"}>{todo.title}</p>
+                  <Button isIconOnly size={"sm"} color={"danger"} onPress={() => dispatch(deleteTodo(todo.id))}><MdDelete size={"24px"}/></Button>
+              </CardBody>
+          </Card>
+  )
+}
+
+export default function TodosPage(){
     const todos: Todo[] = useAppSelector(selectTodos);
     return(
         <div className={"gap-4 flex flex-col text-center"}>
             <TodoInput/>
-        {todos.map(todo => (
-            <Card key={todo.id} className={"w-[300px] lg:w-[330px]  "}>
-                <CardBody className={"flex flex-row justify-between gap-4"}>
-                    <p className={"text-orange-500"}>{todo.title}</p>
-                    <Button isIconOnly size={"sm"} color={"danger"} onPress={() => dispatch(deleteTodo(todo.id))}><MdDelete size={"24px"}/></Button>
-                </CardBody>
-            </Card>
-        ))}
+        {todos.map(todo => (<TodoItem key={todo.id} todo={todo}/>))}
     </div>)
 }
