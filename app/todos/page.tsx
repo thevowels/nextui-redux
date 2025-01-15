@@ -8,18 +8,49 @@ import {
 import { MdDelete } from "react-icons/md";
 
 import {useAppDispatch, useAppSelector} from "@/lib/hooks";
-import {Card, CardHeader, CardBody, CardFooter, Divider, Link, Image, Button} from "@nextui-org/react";
+import {Card, CardHeader, CardBody, CardFooter, Divider, Link, Image, Button, Input} from "@nextui-org/react";
+import {useState} from "react";
+
+function TodoInput() {
+    const dispatch = useAppDispatch();
+    const [todoText, setTodoText ] = useState("");
+    const todos: Todo[] = useAppSelector(selectTodos);
+    function addTodoHandler() {
+        let todo: Todo = {
+            userId:1,
+            id: todos[todos.length-1].id + 1,
+            title: todoText,
+            completed: false
+        }
+        if(todoText!=""){
+            dispatch(addTodo(todo));
+            setTodoText("");
+        }
+    }
+    return(
+        <div className={"flex flex-row gap-8 flex-wrap w-[300px] lg:w-[330px]"}>
+            <Input label="Todo"
+                   type="text"
+                   size={"sm"}
+                   className={"max-w-52"}
+                   value={todoText}
+                   onValueChange={setTodoText}
+            />
+            <Button size={"md"} className={"my-auto"}  onPress={addTodoHandler}>Add</Button>
+        </div>
+    )
+}
 
 export default function TodosPage(){
     const dispatch = useAppDispatch();
     const todos: Todo[] = useAppSelector(selectTodos);
-    return(<div className={"gap-4 flex flex-col"}>
-        Todos
-
+    return(
+        <div className={"gap-4 flex flex-col text-center"}>
+            <TodoInput/>
         {todos.map(todo => (
             <Card key={todo.id} className={"w-[300px] lg:w-[330px]  "}>
                 <CardBody className={"flex flex-row justify-between gap-4"}>
-                    <p>{todo.title}</p>
+                    <p className={"text-orange-500"}>{todo.title}</p>
                     <Button isIconOnly size={"sm"} color={"danger"} onPress={() => dispatch(deleteTodo(todo.id))}><MdDelete size={"24px"}/></Button>
                 </CardBody>
             </Card>
