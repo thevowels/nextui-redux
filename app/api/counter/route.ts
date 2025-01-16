@@ -12,5 +12,5 @@ export async function POST(request: NextRequest, context: any) {
   // simulate IO latency
   await new Promise((resolve) => setTimeout(resolve, 500));
 
-  return NextResponse.json({ data: amount });
+  return NextResponse.json({ data: amount * 2 });
 }

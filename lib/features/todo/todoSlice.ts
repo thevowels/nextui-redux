@@ -47,14 +47,26 @@ export const todoSlice = createAppSlice({
         }),
         updateTodo: create.reducer((state, action: PayloadAction<Todo>)=>{
             state.items = state.items.map(item => item.id == action.payload.id ? action.payload : item);
-        })
+        }),
+        loadAllTodo: create.asyncThunk(
+            async() =>{
+                const json = await fetch("https://jsonplaceholder.typicode.com/todos")
+                                            .then(response => response.json()) ;
+                return json;
+            },
+            {
+                fulfilled: (state, action) =>{
+                    state.items= action.payload;
+                }
+            }
+        )
     }),
     selectors: {
         selectTodos: (todos) => todos.items
     }
 });
 
-export const { addTodo,deleteTodo, updateTodo } = todoSlice.actions;
+export const { addTodo,deleteTodo, updateTodo, loadAllTodo } = todoSlice.actions;
 export const {selectTodos} = todoSlice.selectors;
 
 
