@@ -13,6 +13,10 @@ interface TodosApiResponse{
     skip: number;
     limit: number;
 }
+type TodoParams = {
+    limit:number,
+    skip:number,
+}
 
 export const todosApiSlice = createApi({
     baseQuery: fetchBaseQuery({ baseUrl: "https://dummyjson.com/todos" }),
@@ -20,10 +24,10 @@ export const todosApiSlice = createApi({
     tagTypes: ["Todos"],
     endpoints: ( (build) => ({
 
-        getTodos: build.query<TodosApiResponse, number> ({
-            query: (limit=10) => `?limit=${limit}`,
+        getTodos: build.query<TodosApiResponse, TodoParams > ({
+            query: ({limit=5, skip=0}:TodoParams) => `?limit=${limit}&skip=${skip}`,
 
-            providesTags: (result, error, id) => [{type:"Todos", id}],
+            providesTags: (result, error, id) => [{type:"Todos"}],
         }),
     })),
 });

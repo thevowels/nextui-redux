@@ -5,7 +5,7 @@ import {useAppDispatch} from "@/lib/hooks";
 import {Button, Card, CardBody} from "@nextui-org/react";
 import {MdDelete} from "react-icons/md";
 import {Select, SelectSection, SelectItem} from "@nextui-org/select";
-
+import {Pagination} from "@nextui-org/react";
 
 const options = [
     {key:2,label: 2},
@@ -39,16 +39,16 @@ function TodoItem({todo}:{todo:Todo}){
 
 
 export default function TodosApiPage(){
-    const [numberOfQuotes, setNumberOfQuotes] = useState(10);
+    const [numberOfQuotes, setNumberOfQuotes] = useState(5);
+    const [currentPage, setCurrentPage] = useState(1);
+    const total = 254;
+
     // Using a query hook automatically fetches data and returns query values
-    const handleSelectionChange = (e:any) => {
-        setNumberOfQuotes(Number(e.target.value));
-        console.log(numberOfQuotes);
-    };
 
 
     const { data, isError, isLoading, isSuccess } =
-        useGetTodosQuery(numberOfQuotes);
+        useGetTodosQuery({limit:numberOfQuotes,skip:(currentPage -1 ) * numberOfQuotes});
+
     if (isError) {
         return (
             <div>
@@ -70,21 +70,12 @@ export default function TodosApiPage(){
         return(
             <div>
                 I'm from Todos API.
-                <Select
-                    className="max-w-xs"
-                    isRequired={true}
-                    items={options}
-                    label="Select Amount"
-                    selectedKeys={[String(numberOfQuotes)]}
-                    onChange={handleSelectionChange}
-                >
-                    {options.map((item) => (<SelectItem key={item.key}>{String(item.label)}</SelectItem>))}
-                </Select>
 
                 {data.todos.map((todo:Todo) => (
                     <TodoItem key={todo.id} todo={todo}/>
                 ))}
 
+                <Pagination initialPage={1} total={Math.ceil(total/numberOfQuotes)} showControls  onChange={setCurrentPage}/>
             </div>
         )
 
