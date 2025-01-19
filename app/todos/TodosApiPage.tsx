@@ -2,7 +2,7 @@
 import {useState} from "react";
 import {useGetTodosQuery, Todo} from "@/lib/features/todo/todosApiSlice";
 import {useAppDispatch} from "@/lib/hooks";
-import {Button, Card, CardBody} from "@nextui-org/react";
+import {Button, Card, CardBody, Skeleton} from "@nextui-org/react";
 import {MdDelete} from "react-icons/md";
 import {Select, SelectSection, SelectItem} from "@nextui-org/select";
 import {Pagination, Checkbox} from "@nextui-org/react";
@@ -49,7 +49,7 @@ export default function TodosApiPage() {
     // Using a query hook automatically fetches data and returns query values
 
 
-    const {data, isError, isLoading, isSuccess} =
+    const {data, isError, isLoading, isSuccess, isFetching} =
         useGetTodosQuery({limit:numberOfQuotes,skip:(currentPage -1 ) * numberOfQuotes});
 
     if (isError) {
@@ -73,12 +73,50 @@ export default function TodosApiPage() {
         return(
             <div>
                 I'm from Todos API.
+                {isFetching && (
+                    <Card className="w-[300px] lg:w-[330px] space-y-5 p-4" radius="lg">
+                        <div className="space-y-3">
+                            <Skeleton className="w-3/5 rounded-lg">
+                                <div className="h-3 w-3/5 rounded-lg bg-default-200"/>
+                            </Skeleton>
+                            <Skeleton className="w-4/5 rounded-lg">
+                                <div className="h-3 w-4/5 rounded-lg bg-default-200"/>
+                            </Skeleton>
+                            <Skeleton className="w-2/5 rounded-lg">
+                                <div className="h-3 w-2/5 rounded-lg bg-default-300"/>
+                            </Skeleton>
+                        </div>
+                        <div className="space-y-3">
+                            <Skeleton className="w-3/5 rounded-lg">
+                                <div className="h-3 w-3/5 rounded-lg bg-default-200"/>
+                            </Skeleton>
+                            <Skeleton className="w-4/5 rounded-lg">
+                                <div className="h-3 w-4/5 rounded-lg bg-default-200"/>
+                            </Skeleton>
+                            <Skeleton className="w-2/5 rounded-lg">
+                                <div className="h-3 w-2/5 rounded-lg bg-default-300"/>
+                            </Skeleton>
+                        </div>
+                        <div className="space-y-3">
+                            <Skeleton className="w-3/5 rounded-lg">
+                                <div className="h-3 w-3/5 rounded-lg bg-default-200"/>
+                            </Skeleton>
+                            <Skeleton className="w-4/5 rounded-lg">
+                                <div className="h-3 w-4/5 rounded-lg bg-default-200"/>
+                            </Skeleton>
+                            <Skeleton className="w-2/5 rounded-lg">
+                                <div className="h-3 w-2/5 rounded-lg bg-default-300"/>
+                            </Skeleton>
+                        </div>
+                    </Card>
+                )}
 
-                {data.todos.map((todo:Todo) => (
+                {!isFetching && data.todos.map((todo: Todo) => (
                     <TodoItem key={todo.id} todo={todo}/>
                 ))}
 
-                <Pagination initialPage={1} total={Math.ceil(total/numberOfQuotes)} showControls  onChange={setCurrentPage}/>
+                <Pagination initialPage={1} total={Math.ceil(total / numberOfQuotes)} showControls
+                            onChange={setCurrentPage}/>
             </div>
         )
 
