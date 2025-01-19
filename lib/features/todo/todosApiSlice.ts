@@ -24,7 +24,7 @@ export const todosApiSlice = createApi({
     tagTypes: ["Todos"],
     endpoints: ( (build) => ({
 
-        getTodos: build.query<TodosApiResponse, TodoParams > ({
+        getTodos: build.query<TodosApiResponse, Partial<TodoParams> > ({
             query: ({limit=5, skip=0}:TodoParams) => `?limit=${limit}&skip=${skip}`,
 
             providesTags: (result, error, id) => [{type:"Todos"}],
