@@ -4,10 +4,22 @@ import {useGetTodosQuery, Todo} from "@/lib/features/todo/todosApiSlice";
 import {useAppDispatch} from "@/lib/hooks";
 import {Button, Card, CardBody} from "@nextui-org/react";
 import {MdDelete} from "react-icons/md";
+import {Select, SelectSection, SelectItem} from "@nextui-org/select";
+
+
+const options = [
+    {key:2,label: 2},
+    {key:3,label: 3},
+    {key:5,label: 5},
+    {key:10,label: 10},
+    {key:15,label: 15}
+]
 
 
 function TodoItem({todo}:{todo:Todo}){
     // const dispatch = useAppDispatch();
+
+
     return(
         <Card className={"w-[300px] lg:w-[330px]  "}>
             <CardBody className={"flex flex-row justify-between gap-4"}>
@@ -29,6 +41,10 @@ function TodoItem({todo}:{todo:Todo}){
 export default function TodosApiPage(){
     const [numberOfQuotes, setNumberOfQuotes] = useState(10);
     // Using a query hook automatically fetches data and returns query values
+    const handleSelectionChange = (e:any) => {
+        setNumberOfQuotes(Number(e.target.value));
+        console.log(numberOfQuotes);
+    };
 
 
     const { data, isError, isLoading, isSuccess } =
@@ -51,13 +67,22 @@ export default function TodosApiPage(){
 
 
     if (isSuccess) {
-        console.log(data);
         return(
-            <div className="">
+            <div>
                 I'm from Todos API.
+                <Select
+                    className="max-w-xs"
+                    isRequired={true}
+                    items={options}
+                    label="Select Amount"
+                    selectedKeys={[String(numberOfQuotes)]}
+                    onChange={handleSelectionChange}
+                >
+                    {options.map((item) => (<SelectItem key={item.key}>{String(item.label)}</SelectItem>))}
+                </Select>
 
                 {data.todos.map((todo:Todo) => (
-                    <TodoItem todo={todo}/>
+                    <TodoItem key={todo.id} todo={todo}/>
                 ))}
 
             </div>
