@@ -31,7 +31,7 @@ export const todosApiSlice = createApi({
         }),
         getAllTodos: build.query<TodosApiResponse, null>({
             query: ()=>'',
-            providesTags:(result, error, arg, meta)=>[{type:"Todos",id:"all"}]
+            providesTags:(result, error)=>[{type:"Todos",id:"all"}]
         })
     })),
 });
