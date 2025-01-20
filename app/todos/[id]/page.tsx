@@ -7,7 +7,7 @@ export default function Page() {
     const { id } = useParams();
     const {data, isError, isLoading, isSuccess, isFetching} =
         useGetTodoByIdQuery(id,{
-            pollingInterval: 60000,
+            refetchOnReconnect: true
         });
     if(isError) {
         return(
