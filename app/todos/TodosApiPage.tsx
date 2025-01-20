@@ -1,11 +1,10 @@
 "use client"
 import {useState} from "react";
 import {useGetTodosQuery, Todo} from "@/lib/features/todo/todosApiSlice";
-import {useAppDispatch} from "@/lib/hooks";
 import {Button, Card, CardBody, Skeleton} from "@nextui-org/react";
 import {MdDelete} from "react-icons/md";
-import {Select, SelectSection, SelectItem} from "@nextui-org/select";
 import {Pagination, Checkbox} from "@nextui-org/react";
+import {useRouter} from "next/navigation";
 
 const options = [
     {key:2,label: 2},
@@ -18,19 +17,18 @@ const options = [
 
 function TodoItem({todo}:{todo:Todo}){
     // const dispatch = useAppDispatch();
-
+    const router = useRouter();
 
     return(
         <Card className={"w-[300px] lg:w-[330px]  "}>
             <CardBody className={"flex flex-row gap-4"}>
-                    <Checkbox defaultSelected={todo.completed}/>
-                    <p className={"text-blue-500  font-mono text-start"}>{todo.todo}</p>
+                    <Checkbox isSelected={todo.completed}/>
+                    <p className={"text-blue-500  font-mono text-start"} onClick={()=> router.push(`/todos/${todo.id}`)}>{todo.todo}</p>
                     <Button
                         isIconOnly
                         size={"sm"}
                         color={"danger"}
                         className={"ml-auto my-auto"}
-                        // onPress={() => dispatch(deleteTodo(todo.id))}
                     >
                         <MdDelete size={"24px"}/>
                     </Button>
@@ -74,41 +72,36 @@ export default function TodosApiPage() {
             <div>
                 I'm from Todos API.
                 {isFetching && (
-                    <Card className="w-[300px] lg:w-[330px] space-y-5 p-4" radius="lg">
-                        <div className="space-y-3">
-                            <Skeleton className="w-3/5 rounded-lg">
-                                <div className="h-3 w-3/5 rounded-lg bg-default-200"/>
-                            </Skeleton>
-                            <Skeleton className="w-4/5 rounded-lg">
-                                <div className="h-3 w-4/5 rounded-lg bg-default-200"/>
-                            </Skeleton>
-                            <Skeleton className="w-2/5 rounded-lg">
-                                <div className="h-3 w-2/5 rounded-lg bg-default-300"/>
-                            </Skeleton>
-                        </div>
-                        <div className="space-y-3">
-                            <Skeleton className="w-3/5 rounded-lg">
-                                <div className="h-3 w-3/5 rounded-lg bg-default-200"/>
-                            </Skeleton>
-                            <Skeleton className="w-4/5 rounded-lg">
-                                <div className="h-3 w-4/5 rounded-lg bg-default-200"/>
-                            </Skeleton>
-                            <Skeleton className="w-2/5 rounded-lg">
-                                <div className="h-3 w-2/5 rounded-lg bg-default-300"/>
-                            </Skeleton>
-                        </div>
-                        <div className="space-y-3">
-                            <Skeleton className="w-3/5 rounded-lg">
-                                <div className="h-3 w-3/5 rounded-lg bg-default-200"/>
-                            </Skeleton>
-                            <Skeleton className="w-4/5 rounded-lg">
-                                <div className="h-3 w-4/5 rounded-lg bg-default-200"/>
-                            </Skeleton>
-                            <Skeleton className="w-2/5 rounded-lg">
-                                <div className="h-3 w-2/5 rounded-lg bg-default-300"/>
-                            </Skeleton>
-                        </div>
-                    </Card>
+                    <>
+                        <Card className="w-[300px] lg:w-[330px] space-y-5 p-4" radius="lg">
+                            <div className="space-y-3">
+                                <Skeleton className="w-3/5 rounded-lg">
+                                    <div className="h-3 w-3/5 rounded-lg bg-default-200"/>
+                                </Skeleton>
+                                <Skeleton className="w-4/5 rounded-lg">
+                                    <div className="h-3 w-4/5 rounded-lg bg-default-200"/>
+                                </Skeleton>
+                                <Skeleton className="w-2/5 rounded-lg">
+                                    <div className="h-3 w-2/5 rounded-lg bg-default-300"/>
+                                </Skeleton>
+                            </div>
+                        </Card>
+
+                        <Card className="w-[300px] lg:w-[330px] space-y-5 p-4" radius="lg">
+                            <div className="space-y-3">
+                                <Skeleton className="w-3/5 rounded-lg">
+                                    <div className="h-3 w-3/5 rounded-lg bg-default-200"/>
+                                </Skeleton>
+                                <Skeleton className="w-4/5 rounded-lg">
+                                    <div className="h-3 w-4/5 rounded-lg bg-default-200"/>
+                                </Skeleton>
+                                <Skeleton className="w-2/5 rounded-lg">
+                                    <div className="h-3 w-2/5 rounded-lg bg-default-300"/>
+                                </Skeleton>
+                            </div>
+                        </Card>
+
+                    </>
                 )}
 
                 {!isFetching && data.todos.map((todo: Todo) => (
