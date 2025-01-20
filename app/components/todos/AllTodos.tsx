@@ -40,10 +40,6 @@ function TodoItem({todo}:{todo:Todo}){
 
 
 export default function AllTodos() {
-    const [numberOfQuotes, setNumberOfQuotes] = useState(5);
-    const [currentPage, setCurrentPage] = useState(1);
-
-    // Using a query hook automatically fetches data and returns query values
 
 
     const {data, isError, isLoading, isSuccess} = useGetAllTodosQuery(null);

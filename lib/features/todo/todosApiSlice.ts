@@ -30,7 +30,7 @@ export const todosApiSlice = createApi({
             providesTags: (result, error, arg, meta) => [{type:"Todos",id:JSON.stringify(arg)}],
         }),
         getAllTodos: build.query<TodosApiResponse, null>({
-            query: ()=>'',
+            query: ()=>'?limit=500',
             providesTags:(result, error)=>[{type:"Todos",id:"all"}]
         }),
         getTodoById: build.query<Todo, string|undefined| string[]>({

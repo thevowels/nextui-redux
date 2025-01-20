@@ -2,7 +2,7 @@ import {Todo} from "@/lib/features/todo/todosApiSlice";
 import {Button, Card, CardBody, Checkbox} from "@nextui-org/react";
 import {MdDelete} from "react-icons/md";
 
-function TodoItem({todo}:{todo:Todo}){
+export default function TodoItem({todo}:{todo:Todo}){
 
     return(
         <Card className={"w-[300px] lg:w-[330px]  "}>

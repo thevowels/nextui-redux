@@ -48,7 +48,9 @@ export default function TodosApiPage() {
 
 
     const {data, isError, isLoading, isSuccess, isFetching} =
-        useGetTodosQuery({limit:numberOfQuotes,skip:(currentPage -1 ) * numberOfQuotes});
+        useGetTodosQuery({limit:numberOfQuotes,skip:(currentPage -1 ) * numberOfQuotes},
+            {
+            })
 
     if (isError) {
         return (
