@@ -6,7 +6,9 @@ import {Card, CardBody, Checkbox} from "@nextui-org/react";
 export default function Page() {
     const { id } = useParams();
     const {data, isError, isLoading, isSuccess, isFetching} =
-        useGetTodoByIdQuery(id);
+        useGetTodoByIdQuery(id,{
+            pollingInterval: 60000,
+        });
     if(isError) {
         return(
             <div>
