@@ -1,7 +1,7 @@
 import {createApi, EndpointBuilder, fetchBaseQuery} from "@reduxjs/toolkit/query/react";
 
 export interface Todo{
-    "id":number,
+    "id":number | string,
     "todo": string,
     "completed": boolean,
     "userId": number
@@ -29,7 +29,7 @@ export const todosApiSlice = createApi({
 
             providesTags: (result, error, arg, meta) => [{type:"Todos",id:JSON.stringify(arg)}],
         }),
-        getAllTodos: build.query<TodosApiResponse, null>({
+        getAllTodos: build.query<TodosApiResponse, null | undefined>({
             query: ()=>'?limit=500',
             providesTags:(result, error)=>[{type:"Todos",id:"all"}]
         }),
