@@ -1,4 +1,5 @@
 import {createApi, EndpointBuilder, fetchBaseQuery} from "@reduxjs/toolkit/query/react";
+import {supabase} from "@/supabaseClient";
 
 export interface Todo{
     "id":number | string,
@@ -37,7 +38,20 @@ export const todosApiSlice = createApi({
             query:(id="1")=>`${id}`,
             providesTags: (result, error, arg,meta) => [{type:"Todos",id:'single ' + arg}]
         }),
+        addTodo: build.mutation({
+            queryFn: async (newTodo:any):Promise<any> => {
+                try {
+                    const { data, error } = await supabase.from('todo').insert(newTodo).select();
+                    if (error) throw error;
+                    console.log('inside mutation ', data[0]);
+                    return { data: data[0] as Todo };
+                } catch (error: any) {
+                    return { error: { status: error.status, message: error.message } };
+                }
+            },
+        }),
+
     })),
 });
 
-export const {useGetTodosQuery, useGetAllTodosQuery,  useGetTodoByIdQuery} = todosApiSlice;
+export const {useGetTodosQuery, useGetAllTodosQuery,  useGetTodoByIdQuery, useAddTodoMutation} = todosApiSlice;

@@ -5,6 +5,7 @@ import {Button, Card, CardBody, Skeleton} from "@nextui-org/react";
 import {MdDelete} from "react-icons/md";
 import {Pagination, Checkbox} from "@nextui-org/react";
 import {useRouter} from "next/navigation";
+import TodoInput from "@/app/components/todos/TodoInput";
 
 const options = [
     {key:2,label: 2},
@@ -73,6 +74,7 @@ export default function TodosApiPage() {
         return(
             <div>
                 I'm from Todos API.
+                <TodoInput/>
                 {isFetching && (
                     <>
                         <Card className="w-[300px] lg:w-[330px] space-y-5 p-4" radius="lg">
