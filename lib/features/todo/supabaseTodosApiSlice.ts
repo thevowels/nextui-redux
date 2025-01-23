@@ -71,8 +71,7 @@ export const supabasetodosApiSlice = createApi({
                     })
                 )
                 try{
-                    // const {data: savedTodo} = await queryFulfilled;
-                    console.log('saved Todo ', await queryFulfilled);
+                    const {data: savedTodo} = await queryFulfilled;
                 }catch{
                     patchResult.undo();
                 }
@@ -99,8 +98,7 @@ export const supabasetodosApiSlice = createApi({
                     }),
                 )
                 try{
-                    // const {data: deletedTodo } = await queryFulfilled;
-                    console.log('deleted blah ', await queryFulfilled);
+                    const {data: deletedTodo } = await queryFulfilled;
                 }catch{
                     patchResult.undo();
                 }
