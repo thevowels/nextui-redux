@@ -2,9 +2,11 @@ import {Todo} from "@/lib/features/todo/todosApiSlice";
 import {Button, Card, CardBody, Checkbox} from "@nextui-org/react";
 import {MdDelete} from "react-icons/md";
 import {useRouter} from "next/navigation";
+import {useDeleteSupabaseTodoMutation} from "@/lib/features/todo/supabaseTodosApiSlice";
 
 export default function TodoItem({todo}:{todo:Todo}){
     const router = useRouter();
+    const [deleteTodoApi, deleteTodoResult ] = useDeleteSupabaseTodoMutation();
 
     return(
         <Card className={"w-[300px] lg:w-[330px]  "}>
@@ -17,6 +19,13 @@ export default function TodoItem({todo}:{todo:Todo}){
                     color={"danger"}
                     className={"ml-auto my-auto"}
                     // onPress={() => dispatch(deleteTodo(todo.id))}
+                    onPress={() => {
+                        deleteTodoApi(todo.id)
+                            .unwrap()
+                            .then(result => {
+                                console.log('deleteTodoApi Response ' ,result);
+                            })
+                    }}
                 >
                     <MdDelete size={"24px"}/>
                 </Button>

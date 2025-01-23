@@ -1,11 +1,11 @@
 "use client"
 import {useState} from "react";
 import {Button, Input} from "@nextui-org/react";
-import { useAddTodoMutation, Todo} from "@/lib/features/todo/todosApiSlice";
+import { useAddSupabaseTodoMutation, Todo} from "@/lib/features/todo/supabaseTodosApiSlice";
 
 export default function TodoInput() {
     const [todoText, setTodoText ] = useState("");
-    const [addTodoApi, addTodoResult ] = useAddTodoMutation();
+    const [addTodoApi, addTodoResult ] = useAddSupabaseTodoMutation();
 
     function addTodoHandler() {
         let todo: Partial<Todo> = {

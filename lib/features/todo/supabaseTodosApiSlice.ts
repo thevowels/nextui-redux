@@ -35,22 +35,65 @@ export const supabasetodosApiSlice = createApi({
             },
             providesTags:(result, error)=>[{type:"supabaseTodos",id:"all"}]
         }),
-        getSupabaseTodoById: build.query<Todo, string|undefined> ({
+        getSupabaseTodoById: build.query<Todo, string|undefined | string[]> ({
             queryFn: async(id  ):Promise<any> => {
                 try{
-                    const { data, error } = await supabase.from('todo').select().eq("id", id);
+                    const { data, error } = await supabase.from('todo').select().eq("id", id).single();
                     if(error){
                         throw error
                     }
-                    console.log('from supabaseApi ', data)
                     return {data}
                 } catch (error: any) {
                     return { error: { status: error.status, message: error.message } };
                 }
             }
+        }),
+        addSupabaseTodo: build.mutation({
+            queryFn: async (newTodo:any):Promise<any> => {
+                try {
+                    const { data, error } = await supabase.from('todo').insert(newTodo).select().single();
+                    if (error) throw error;
+                    console.log('adding supabaseTodo ', data);
+                    return { data };
+                } catch (error: any) {
+                    return { error: { status: error.status, message: error.message } };
+                }
+            },
+            async onQueryStarted(todo:Todo, {dispatch, queryFulfilled}) {
+                console.log('on Querystarted called. todo: ', todo);
+                const patchResult = dispatch(
+                    supabasetodosApiSlice.util.updateQueryData('getAllSupabaseTodos', undefined, (draft) => {
+                        draft.push(todo);
+                        return draft;
+                        console.log('waht is draft', draft);
+                    })
+                );
+                try{
+                    await queryFulfilled;
+                    console.log('queryFulfilled');
+                }catch{
+                    console.log('facing Error');
+                    patchResult.undo();
+                }
+            },
+        }),
+        deleteSupabaseTodo: build.mutation({
+            queryFn: async (id ) : Promise<any> => {
+                try{
+                    const {data, error } = await supabase.from('todo').delete().eq('id', id).select().single();
+                    if(error) throw error;
+                    return {data:data as Todo};
+                }catch(error:any) {
+                    return { error: { status: error.status, message: error.message } };
+                }
+            },
+            invalidatesTags:() => [
+                {type:"supabaseTodos", id:"all"}
+            ]
         })
+
 
     })),
 });
 
-export const { useGetAllSupabaseTodosQuery } = supabasetodosApiSlice;
+export const { useGetAllSupabaseTodosQuery, useGetSupabaseTodoByIdQuery, useAddSupabaseTodoMutation, useDeleteSupabaseTodoMutation } = supabasetodosApiSlice;
