@@ -36,7 +36,6 @@ export const supabasetodosApiSlice = createApi({
             providesTags:(result, error)=>[
                 {type:"supabaseTodos",id:"all"},
                 ...result.map(({ id }:{id:any}) => ({ type: 'supabaseTodos', id } as const)),
-
             ]
         }),
         getSupabaseTodoById: build.query<Todo, string|undefined | string[]> ({
@@ -65,22 +64,22 @@ export const supabasetodosApiSlice = createApi({
             },
             async onQueryStarted(todo:Todo, {dispatch, queryFulfilled}) {
                 console.log('onQueryStarted ', todo);
+                const patchResult = dispatch(
+                    supabasetodosApiSlice.util.updateQueryData('getAllSupabaseTodos', null,  (draft)=>{
+                        draft.push(todo);
+                        return draft;
+                    })
+                )
                 try{
-                    const {data: savedTodo} = await queryFulfilled;
-                    console.log('saved Todo ', savedTodo);
-                    const patchResult = dispatch(
-                        supabasetodosApiSlice.util.updateQueryData('getAllSupabaseTodos', null,  (draft)=>{
-                            draft.push(savedTodo);
-                            return draft;
-                        })
-                    )
+                    // const {data: savedTodo} = await queryFulfilled;
+                    console.log('saved Todo ', await queryFulfilled);
                 }catch{
-
+                    patchResult.undo();
                 }
 
             },
         }),
-        deleteSupabaseTodo: build.mutation({
+        deleteSupabaseTodo: build.mutation<Todo, string|number>({
             queryFn: async (id ) : Promise<any> => {
                 try{
                     const {data, error } = await supabase.from('todo').delete().eq('id', id).select().single();
@@ -90,7 +89,23 @@ export const supabasetodosApiSlice = createApi({
                     return { error: { status: error.status, message: error.message } };
                 }
             },
-            invalidatesTags:() => [{type:"supabaseTodos", id:"all"}]
+            async onQueryStarted(id:string|number, {dispatch, queryFulfilled}){
+                console.log('delete onQueryStarted', id);
+                const patchResult = dispatch(
+                    supabasetodosApiSlice.util.updateQueryData('getAllSupabaseTodos', null, (draft) => {
+                        console.log('Draft from delete ', draft);
+                        draft = draft.filter((todoItem:any) => todoItem.id != id);
+                        return draft;
+                    }),
+                )
+                try{
+                    // const {data: deletedTodo } = await queryFulfilled;
+                    console.log('deleted blah ', await queryFulfilled);
+                }catch{
+                    patchResult.undo();
+                }
+
+            }
         })
 
 

@@ -24,6 +24,8 @@ export default function TodoItem({todo}:{todo:Todo}){
                             .unwrap()
                             .then(result => {
                                 console.log('deleteTodoApi Response ' ,result);
+                            },err =>{
+                                console.log('deleteTodo Error ', err);
                             })
                     }}
                 >
