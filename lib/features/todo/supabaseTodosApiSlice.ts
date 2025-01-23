@@ -33,7 +33,11 @@ export const supabasetodosApiSlice = createApi({
                     return { error: { status: error.status, message: error.message } };
                 }
             },
-            providesTags:(result, error)=>[{type:"supabaseTodos",id:"all"}]
+            providesTags:(result, error)=>[
+                {type:"supabaseTodos",id:"all"},
+                ...result.map(({ id }:{id:any}) => ({ type: 'supabaseTodos', id } as const)),
+
+            ]
         }),
         getSupabaseTodoById: build.query<Todo, string|undefined | string[]> ({
             queryFn: async(id  ):Promise<any> => {
