@@ -18,7 +18,9 @@ export default function TodoInput() {
             addTodoApi(todo)
                 .unwrap()
                 .then(result => {
-                    console.log('returned value ', result);
+                    console.log('Add Success value ', result);
+                }, err => {
+                    console.log('Add Error ', err);
                 })
             setTodoText("");
         }

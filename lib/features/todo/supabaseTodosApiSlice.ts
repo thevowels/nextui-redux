@@ -60,21 +60,20 @@ export const supabasetodosApiSlice = createApi({
                 }
             },
             async onQueryStarted(todo:Todo, {dispatch, queryFulfilled}) {
-                console.log('on Querystarted called. todo: ', todo);
-                const patchResult = dispatch(
-                    supabasetodosApiSlice.util.updateQueryData('getAllSupabaseTodos', undefined, (draft) => {
-                        draft.push(todo);
-                        return draft;
-                        console.log('waht is draft', draft);
-                    })
-                );
+                console.log('onQueryStarted ', todo);
                 try{
-                    await queryFulfilled;
-                    console.log('queryFulfilled');
+                    const {data: savedTodo} = await queryFulfilled;
+                    console.log('saved Todo ', savedTodo);
+                    const patchResult = dispatch(
+                        supabasetodosApiSlice.util.updateQueryData('getAllSupabaseTodos', null,  (draft)=>{
+                            draft.push(savedTodo);
+                            return draft;
+                        })
+                    )
                 }catch{
-                    console.log('facing Error');
-                    patchResult.undo();
+
                 }
+
             },
         }),
         deleteSupabaseTodo: build.mutation({
@@ -87,9 +86,7 @@ export const supabasetodosApiSlice = createApi({
                     return { error: { status: error.status, message: error.message } };
                 }
             },
-            invalidatesTags:() => [
-                {type:"supabaseTodos", id:"all"}
-            ]
+            invalidatesTags:() => [{type:"supabaseTodos", id:"all"}]
         })
 
 
