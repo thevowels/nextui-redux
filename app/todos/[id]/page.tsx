@@ -1,13 +1,14 @@
 "use client"
 import {useParams} from "next/navigation";
-import {useGetAllTodosQuery, useGetTodoByIdQuery, Todo} from "@/lib/features/todo/todosApiSlice";
+import { Todo} from "@/lib/features/todo/todosApiSlice";
 import {Card, CardBody, Checkbox} from "@nextui-org/react";
+import {useGetAllSupabaseTodosQuery} from "@/lib/features/todo/supabaseTodosApiSlice";
 export default function Page() {
     const { id } = useParams();
 
-    const { todo } = useGetAllTodosQuery(undefined, {
+    const { todo } = useGetAllSupabaseTodosQuery(undefined, {
         selectFromResult: ({data}) =>({
-            todo: data?.todos.find((todo:Todo) => todo.id == id)
+            todo: data?.find((todo:Todo) => todo.id == id)
         })
     })
     if(todo) {
