@@ -2,7 +2,7 @@ import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/query/react";
 import {supabase} from "@/supabaseClient";
 
 export interface Todo{
-    "id":number | string,
+    "id"?:number | string,
     "todo": string,
     "completed": boolean,
     "userId": number
@@ -49,7 +49,8 @@ export const supabasetodosApiSlice = createApi({
                 } catch (error: any) {
                     return { error: { status: error.status, message: error.message } };
                 }
-            }
+            },
+            providesTags: (result) => [{type:'supabaseTodos', id: result?.id}]
         }),
         addSupabaseTodo: build.mutation({
             queryFn: async (newTodo:any):Promise<any> => {
@@ -64,17 +65,13 @@ export const supabasetodosApiSlice = createApi({
             },
             async onQueryStarted(todo:Todo, {dispatch, queryFulfilled}) {
                 console.log('onQueryStarted ', todo);
+                const {data: savedTodo} = await queryFulfilled;
                 const patchResult = dispatch(
                     supabasetodosApiSlice.util.updateQueryData('getAllSupabaseTodos', null,  (draft)=>{
-                        draft.push(todo);
+                        draft.push(savedTodo);
                         return draft;
                     })
                 )
-                try{
-                    const {data: savedTodo} = await queryFulfilled;
-                }catch{
-                    patchResult.undo();
-                }
 
             },
         }),
@@ -104,10 +101,22 @@ export const supabasetodosApiSlice = createApi({
                 }
 
             }
+        }),
+        updateSupabaseTodo: build.mutation<Todo, Todo>({
+            queryFn: async (todo: Todo) : Promise<any> => {
+                try{
+                    const {data, error } = await supabase.from('todo').update(todo).eq('id', todo.id).select().single();
+                    if(error) throw error;
+                    return {data: data as Todo};
+                }catch(error:any){
+                    return { error: { status: error.status, message: error.message } };
+                }
+            },
+            invalidatesTags: (result) =>  [{type:'supabaseTodos', id:result?.id}]
         })
 
 
     })),
 });
 
-export const { useGetAllSupabaseTodosQuery, useGetSupabaseTodoByIdQuery, useAddSupabaseTodoMutation, useDeleteSupabaseTodoMutation } = supabasetodosApiSlice;
+export const { useGetAllSupabaseTodosQuery, useGetSupabaseTodoByIdQuery, useAddSupabaseTodoMutation, useDeleteSupabaseTodoMutation, useUpdateSupabaseTodoMutation } = supabasetodosApiSlice;
