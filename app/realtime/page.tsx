@@ -26,16 +26,11 @@ const defaultTodos = [
 ]
 
 export default function Page(){
-    const [todos, setTodos] = useState([    {
-        id: 1,
-        completed: true,
-        todo:"Todo 1",
-        userId:4
-    },
-    ]);
+    const emptyTodos: Todo[] = []
+    const [todos, setTodos] = useState(emptyTodos);
     async function getTodos() {
         const { data, error } = await supabase.from('todo').select();
-        if(data){
+        if(data && data.length>=1){
             setTodos(data);
         }
 
@@ -43,9 +38,9 @@ export default function Page(){
     useEffect( () => {
         getTodos();
     },[])
-    const something = supabase
-        .channel('room1')
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'todo' }, payload => {
+    supabase
+        .channel('insertTodo')
+        .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'todo' }, payload => {
             console.log('Change received!', payload);
             setTodos([
                 // @ts-ignore
@@ -55,7 +50,13 @@ export default function Page(){
             ])
         })
         .subscribe()
-    console.log('asdf', something);
+    supabase
+        .channel('deleteTodo')
+        .on('postgres_changes', { event: 'DELETE', schema: 'public', table: 'todo' }, payload => {
+            console.log('Todo deleted!', payload);
+            setTodos(todos.filter(todo => todo.id != payload.old.id));
+        })
+        .subscribe()
 
 
     return(
