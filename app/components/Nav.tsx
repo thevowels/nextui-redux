@@ -40,6 +40,14 @@ export const Nav = () => {
     >
         Todos
     </Link>
+    <Link
+        className={`${styles.link} ${
+            pathname === "/realtime" ? styles.active : ""
+        }`}
+        href="/realtime"
+    >
+        Realtime
+    </Link>
     </nav>
   );
 };
