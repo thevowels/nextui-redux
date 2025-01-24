@@ -26,10 +26,18 @@ const defaultTodos = [
 ]
 
 export default function Page(){
-    const [todos, setTodos] = useState([]);
+    const [todos, setTodos] = useState([    {
+        id: 1,
+        completed: true,
+        todo:"Todo 1",
+        userId:4
+    },
+    ]);
     async function getTodos() {
         const { data, error } = await supabase.from('todo').select();
-        setTodos(data!);
+        if(data){
+            setTodos(data);
+        }
 
     }
     useEffect( () => {
@@ -40,7 +48,9 @@ export default function Page(){
         .on('postgres_changes', { event: '*', schema: 'public', table: 'todo' }, payload => {
             console.log('Change received!', payload);
             setTodos([
+                // @ts-ignore
                 ...todos,
+                // @ts-ignore
                 payload.new
             ])
         })
